@@ -116,16 +116,16 @@ public:
      * Iterator for a const instance of Queue.
      */
     class ConstIterator;
-
-    /**
-     * returns the pointer to the first element in the constant queue
-     */
-    ConstIterator begin() const;
-    /**
-     * returns the pointer to the last element in the constant queue
-     */
-    ConstIterator end() const;
-
+//
+//    /**
+//     * returns the pointer to the first element in the constant queue
+//     */
+//    ConstIterator begin() const;
+//    /**
+//     * returns the pointer to the last element in the constant queue
+//     */
+//    ConstIterator end() const;
+//
 private:
     Node *m_firstElement;
     Node *m_lastElement;
@@ -306,7 +306,7 @@ public:
     Iterator& operator++();
     Iterator operator++(int);
 
-    bool operator!=(const Iterator& iterator) const;
+    bool operator!=(const Iterator& iterator);
     Iterator(const Iterator& other) = default;
     Iterator& operator=(const Iterator&) = default;
     ~Iterator() = default;
@@ -344,9 +344,10 @@ Queue<T>& filter(const Queue<T>& queue, bool (*condition)(T))
 {
     try {
         Queue<T>* filteredQueue = new Queue<T>();
-        for (const struct Queue<T>::Node& currentNode : queue) {
-            if (condition(currentNode.m_value)) {
-                filteredQueue->pushBack(currentNode.m_value);
+        for (typename Queue<T>::ConstIterator currentNode = queue.();
+             currentNode != queue.constEnd(); ++currentNode) {
+            if (condition(*currentNode)) {
+                filteredQueue->pushBack(*currentNode);
             }
         }
         return *filteredQueue;
@@ -360,8 +361,9 @@ Queue<T>& filter(const Queue<T>& queue, bool (*condition)(T))
 
 template <class T>
 void transform(Queue<T>& queue, void (*operation)(T&)) {
-    for (struct Queue<T>::Node& currentNode : queue) {
-        operation(currentNode.m_value);
+    for (typename Queue<T>::Iterator currentNode = queue.begin();
+    currentNode != queue.end(); ++currentNode){
+        operation(*currentNode);
     }
 }
 
@@ -407,16 +409,23 @@ typename Queue<T>::Iterator Queue<T>::Iterator::operator++(int)
 }
 
 template <class T>
-typename Queue<T>::ConstIterator Queue<T>::begin() const
+bool Queue<T>::Iterator::operator!=(const Queue<T>::Iterator& iterator)
 {
-    return ConstIterator(this, m_firstElement);
+    return (m_currentNode != iterator.m_currentNode);
 }
 
-template <class T>
-typename Queue<T>::ConstIterator Queue<T>::end() const
-{
-    return ConstIterator(this, nullptr);
-}
+//
+//template <class T>
+//typename Queue<T>::ConstIterator Queue<T>::begin() const
+//{
+//    return ConstIterator(this, m_firstElement);
+//}
+//
+//template <class T>
+//typename Queue<T>::ConstIterator Queue<T>::end() const
+//{
+//    return ConstIterator(this, nullptr);
+//}
 
 template <class T>
 Queue<T>::ConstIterator::ConstIterator(const Queue<T>* queue, const Node *currentNode) : m_queue(queue),
@@ -447,8 +456,10 @@ typename Queue<T>::ConstIterator Queue<T>::ConstIterator::operator++(int)
     return result;
 }
 
-
-
-
+template <class T>
+bool Queue<T>::ConstIterator::operator!=(const Queue<T>::ConstIterator& constIterator) const
+{
+    return (m_currentNode != constIterator.m_currentNode);
+}
 
 #endif //HEALTHPOINTS_H_QUEUE_H
