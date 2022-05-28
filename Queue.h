@@ -164,8 +164,7 @@ void transform(Queue<T>& queue, void (*operation)(T&));
 
 
 template <class T>
-Queue<T>::Queue() : m_firstElement(nullptr), m_lastElement(nullptr)
-{};
+Queue<T>::Queue() : m_firstElement(nullptr), m_lastElement(nullptr) {}
 
 template <class T>
 Queue<T>::Queue(const Queue& other) : m_firstElement(new Node(*other.m_firstElement))
@@ -183,7 +182,7 @@ Queue<T>::Queue(const Queue& other) : m_firstElement(new Node(*other.m_firstElem
         delete(this);
         throw;
     }
-};
+}
 
 template <class T>
 Queue<T>::~Queue()
@@ -195,7 +194,7 @@ Queue<T>::~Queue()
         delete(toDelete);
         toDelete = m_firstElement;
     }
-};
+}
 
 template <class T>
 Queue<T>& Queue<T>::operator=(const Queue& other)
@@ -225,7 +224,7 @@ Queue<T>& Queue<T>::operator=(const Queue& other)
         throw;
     }
     return *this;
-};
+}
 
 template <class T>
 void Queue<T>::pushBack(const T& element)
@@ -245,7 +244,7 @@ void Queue<T>::pushBack(const T& element)
     }
     m_lastElement->m_next = newNode;
     m_lastElement = newNode;
-};
+}
 
 template <class T>
 T& Queue<T>::front()
@@ -254,16 +253,15 @@ T& Queue<T>::front()
         throw Queue<T>::EmptyQueue();
     }
     return m_firstElement->m_value;
-};
+}
 
 template <class T>
-const T& Queue<T>::front() const
-{
-    if (isEmpty()){
+const T& Queue<T>::front() const {
+    if (isEmpty()) {
         throw Queue<T>::EmptyQueue();
     }
     return m_firstElement->m_value;
-};
+}
 
 template <class T>
 void Queue<T>::popFront()
@@ -274,7 +272,7 @@ void Queue<T>::popFront()
     Node *temp = m_firstElement;
     m_firstElement = m_firstElement->m_next;
     delete(temp);
-};
+}
 
 template <class T>
 int Queue<T>::size() const
@@ -289,13 +287,13 @@ int Queue<T>::size() const
         tempHead = tempHead->m_next;
     }
     return ++size;
-};
+}
 
 template <class T>
 bool Queue<T>::isEmpty() const
 {
     return (m_firstElement == nullptr);
-};
+}
 
 
 template <class T>
@@ -381,8 +379,7 @@ typename Queue<T>::Iterator Queue<T>::end()
 
 template <class T>
 Queue<T>::Iterator::Iterator(const Queue<T>* queue, Node* currentNode) : m_queue(queue),
-m_currentNode(currentNode)
-{}
+m_currentNode(currentNode) {}
 
 template <class T>
 T& Queue<T>::Iterator::operator*()
@@ -429,8 +426,7 @@ typename Queue<T>::ConstIterator Queue<T>::end() const
 
 template <class T>
 Queue<T>::ConstIterator::ConstIterator(const Queue<T>* queue, const Node *currentNode) : m_queue(queue),
-                                                                               m_currentNode(currentNode)
-{}
+                                                                               m_currentNode(currentNode) {}
 
 template <class T>
 const T& Queue<T>::ConstIterator::operator*() const
