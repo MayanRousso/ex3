@@ -6,6 +6,7 @@
 #define HEALTHPOINTS_H_QUEUE_H
 
 #include <new>
+#include <iostream>
 
 
 template <class T>
@@ -20,13 +21,13 @@ public:
         /**
          * C'tor of Node
          */
-        Node() : m_value(nullptr), m_next(nullptr)
+        Node() : m_value(NULL), m_next(nullptr)
         {};
 
         /**
          * C'tor of Node
          */
-        Node(T value) : m_value(value), m_next(nullptr)
+        explicit Node(T value) : m_value(value), m_next(nullptr)
         {};
 
         /**
@@ -342,30 +343,27 @@ template <class T>
 Queue<T>& filter(const Queue<T>& queue, bool (*condition)(T))
 {
     try {
-        Queue<T> filteredQueue;
+        Queue<T>* filteredQueue = new Queue<T>();
         for (const struct Queue<T>::Node& currentNode : queue) {
-            if (condition(currentNode->m_value)) {
-                filteredQueue.pushBack(currentNode->m_value);
+            if (condition(currentNode.m_value)) {
+                filteredQueue->pushBack(currentNode.m_value);
             }
         }
-        return filteredQueue;
+        return *filteredQueue;
     }
     catch (std::bad_alloc& memoryAllocationError)
     {
-        delete (queue);
+        delete (&queue);
         throw;
     }
 }
 
 template <class T>
-void transform(Queue<T>& queue, void (*operation)(T&))
-{
-    struct Queue<T>::Node* tempNode = queue.m_firstElement;
-    while (!tempNode) {
-        operation(tempNode->m_value);
-        tempNode = tempNode->m_next;
+void transform(Queue<T>& queue, void (*operation)(T&)) {
+    for (struct Queue<T>::Node& currentNode : queue) {
+        operation(currentNode.m_value);
     }
-};
+}
 
 template <class T>
 typename Queue<T>::Iterator Queue<T>::begin()
